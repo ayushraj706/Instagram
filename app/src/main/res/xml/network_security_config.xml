@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  network_security_config.xml
+  Keeps HTTPS enforced for all domains.
+  Instagram CDN domains use standard TLS — no special pinning overrides needed.
+  If you add a local debug proxy (Charles/MITMProxy), add a debug override here.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- Optional: allow debug proxy on emulator/dev device only -->
+    <!-- Uncomment below during development with a proxy tool
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="user" />
+        </trust-anchors>
+    </debug-overrides>
+    -->
+</network-security-config>
