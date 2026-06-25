@@ -1,0 +1,41 @@
+name: Build Android APK
+
+# Kab run hoga? Push par aur manual trigger (workflow_dispatch) par
+on:
+  push:
+    branches: [ "main" ] # Yahan aapni branch ka naam confirm kar lein
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Aapke repo ka code fetch karega
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Java setup karega (Android compile karne ke liye zaroori)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17' # Apne project ke hisaab se version change kar sakte hain (e.g., 11 ya 17)
+          distribution: 'temurin'
+          cache: gradle
+
+      # 3. Gradle ko executable permission dega
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # 4. Debug APK build karega
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug --stacktrace
+
+      # 5. Build hone ke baad APK ko GitHub par upload karega (as Artifact)
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          
